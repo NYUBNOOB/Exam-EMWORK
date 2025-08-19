@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -17,11 +17,11 @@ export default function Home() {
         sx={{
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           gap: 2
         }}
       >
-        <Button variant="contained" onClick={() => router.push("/user")}>User</Button>
-        <Button variant="contained" onClick={() => router.push("/product")}>Product</Button>
+        <Typography variant="h4">Exam EMWORK</Typography>
         <Button variant="contained" onClick={() => router.push("/tasks")}>Task</Button>
       </Box>
     </Container>

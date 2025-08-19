@@ -1,21 +1,25 @@
 "use client";
 
-import { Box, Container, TextField, Typography, Button, MenuItem } from "@mui/material";
+import {
+  Box,
+  Container,
+  TextField,
+  Typography,
+  Button,
+  MenuItem,
+} from "@mui/material";
+import { TaskStatus, TaskType } from "@prisma/client";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 
-interface Task {
-  id?: number;
+interface Type{
   type: "Development" | "Test" | "Document";
   name: string;
   startAt: string;
   endAt: string | null;
   status: "InProgress" | "Finish" | "Cancle";
 }
-
-const taskTypes = ["Development", "Test", "Document"];
-const taskStatus = ["InProgress", "Finish", "Cancle"];
 
 export default function CreateTaskPage() {
   const router = useRouter();
@@ -36,7 +40,11 @@ export default function CreateTaskPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.post("/api/tasks", formData);
+      await axios.post(`http://localhost:3000/api/tasks`, 
+        {
+          ...formData
+        }
+      );
       router.push("/tasks");
     } catch (e) {
       console.error("Error creating task:", e);
@@ -52,7 +60,6 @@ export default function CreateTaskPage() {
       >
         <Typography variant="h5">Create Task</Typography>
 
-        {/* Type select */}
         <TextField
           select
           name="type"
@@ -60,42 +67,35 @@ export default function CreateTaskPage() {
           label="Type"
           onChange={handleChange}
         >
-          {taskTypes.map((t) => (
-            <MenuItem key={t} value={t}>
-              {t}
-            </MenuItem>
-          ))}
+          <MenuItem value={TaskType.Development}>Development</MenuItem>
+          <MenuItem value={TaskType.Document}>Document</MenuItem>
+          <MenuItem value={TaskType.Test}>Test</MenuItem>
         </TextField>
 
-        {/* Name */}
         <TextField
           name="name"
           value={formData.name}
           label="Name"
           onChange={handleChange}
         />
-
-        {/* StartAt */}
         <TextField
           name="startAt"
           value={formData.startAt}
+          type="date"
           label="Start At"
-          type="datetime-local"
           InputLabelProps={{ shrink: true }}
           onChange={handleChange}
         />
 
-        {/* EndAt */}
         <TextField
           name="endAt"
           value={formData.endAt}
+          type="date"
           label="End At"
-          type="datetime-local"
           InputLabelProps={{ shrink: true }}
           onChange={handleChange}
         />
 
-        {/* Status select */}
         <TextField
           select
           name="status"
@@ -103,17 +103,19 @@ export default function CreateTaskPage() {
           label="Status"
           onChange={handleChange}
         >
-          {taskStatus.map((s) => (
-            <MenuItem key={s} value={s}>
-              {s === "Cancle" ? "Cancel" : s}
-            </MenuItem>
-          ))}
+          <MenuItem value={TaskStatus.InProgress}>InProgress</MenuItem>
+          <MenuItem value={TaskStatus.Finish}>Finish</MenuItem>
+          <MenuItem value={TaskStatus.Cancle}>Cancle</MenuItem>
         </TextField>
 
         <Button type="submit" variant="contained">
           Submit
         </Button>
-        <Button variant="contained" color="error" onClick={() => router.push("/tasks")}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => router.push("/tasks")}
+        >
           Cancel
         </Button>
       </Box>
