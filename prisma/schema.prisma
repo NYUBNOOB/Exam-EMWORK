@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskType {
+  Development
+  Test
+  Document
+}
+
+enum TaskStatus {
+  InProgress
+  Finish
+  Cancle
+}
+
+model Task {
+  id        String      @id @default(uuid())
+  type      TaskType     // ประเภทงาน
+  startAt   DateTime?   // เวลาเริ่มงาน
+  endAt     DateTime?    // เวลาสิ้นสุดงาน
+  name      String?     // ชื่องาน
+  status    TaskStatus   // สถานะงาน (In-progress, Finish , Cancle)
+  createdAt DateTime @default(now())   // เวลาที่บันทึก
+  updatedAt DateTime @updatedAt        // เวลาแก้ไขล่าสุด
+}
